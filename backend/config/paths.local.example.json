@@ -1,0 +1,6 @@
+{
+  "runs_root": "/scratch/project_XXXXXXX/vos_annotation_runs",
+  "torch_cache_dir": "/scratch/project_XXXXXXX/torch_cache",
+  "tmp_dir": "/scratch/project_XXXXXXX/tmp",
+  "ffmpeg_module": "ffmpeg"
+}

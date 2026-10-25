@@ -12,6 +12,8 @@ This application provides an interactive interface for:
 - Annotating behaviour per cow on a timeline (behaviour annotation mode)
 - Exporting annotation results
 
+For a description of the app and a step-by-step guide to the annotation workflow, see the user manual [`JISTBA-manual.pdf`](JISTBA-manual.pdf). This README covers installation and setup.
+
 The repository has two independent parts:
 
 - **`backend/`** – FastAPI server (`server.py`), its Python dependencies and config. This is the part that runs on the GPU machine; you can copy just this folder to a server.
@@ -41,6 +43,8 @@ cd vos-annoation_app/backend
 
 ### 1. Load Required Modules (Cluster/HPC Systems)
 
+> **Note:** The installation can differ depending on the cluster you use: module names, versions, GPU architecture and preinstalled packages vary. Check what is available with `module avail` / `module spider`. If you run into errors, it helps to discuss them (together with your cluster's documentation and the list of available modules) with an LLM assistant.
+
 On cluster systems, you may need to load modules first. **Python 3.11 or higher is recommended:**
 
 ```bash
@@ -49,16 +53,25 @@ module load python/3.11      # or python/3.12, python3
 module load ffmpeg           # required for video processing
 ```
 
+Some clusters provide PyTorch as a module built for their hardware. For example, on CSC Roihu (GH200 GPU nodes):
+
+```bash
+# Load the GH200 optimized PyTorch module
+module load python-pytorch/2.13
+```
+
+If you load a PyTorch module, create the virtual environment with `--system-site-packages` (step 2) so it can see the module's PyTorch, and skip step 3.
+
 ### 2. Create Python Virtual Environment
 
 ```bash
-python3 -m venv venv
+python3 -m venv venv         # with a PyTorch module: python3 -m venv --system-site-packages venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
 ### 3. Install PyTorch (Required for SAM-3)
 
-SAM-3 requires PyTorch. Install it before installing SAM-3:
+Skip this step if PyTorch comes from a cluster module (step 1). Otherwise, SAM-3 requires PyTorch. Install it before installing SAM-3:
 
 ```bash
 python3 -m pip install --upgrade pip
@@ -110,6 +123,8 @@ XMem can live elsewhere – set `xmem_repo` / `xmem_model` in `config/paths.loca
 ```bash
 pip install -r requirements.txt
 ```
+
+If PyTorch comes from a cluster module, note that `requirements.txt` pins `torch`, `torchvision`, `torchaudio` and the `nvidia-*` CUDA packages (x86 / CUDA 12.6 builds). Installing them would override the module's PyTorch, so remove those lines from a copy of the file first, or install the remaining packages individually as needed.
 
 ## Frontend Installation
 
@@ -284,7 +299,8 @@ vos-annoation_app/
 │   ├── setup-env.sh                  # Creates frontend/.env
 │   ├── package.json
 │   └── vite.config.js
-└── scripts/                          # Helper scripts for tunnels / WSL startup
+├── scripts/                          # Helper scripts for tunnels / WSL startup
+└── JISTBA-manual.pdf                 # User manual: app overview and annotation workflow
 ```
 
 ## Troubleshooting

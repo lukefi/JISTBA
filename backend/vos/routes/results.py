@@ -12,6 +12,7 @@ from vos.behavior import (
     sync_activity_visibility_from_masks,
 )
 from vos.config import RUNS_ROOT, VIDEO_NAME, config_dir, log
+from vos.overlay import label_png_to_palette_bytes
 from vos.storage import get_annotation_mode, parse_meta_file
 
 
@@ -99,9 +100,17 @@ def download_golden(run_id: str, background_tasks: BackgroundTasks):
     log.info(f"[DOWNLOAD_GOLDEN] Creating zip file: {zip_path}")
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for file_path in golden_root.rglob('*'):
-            if file_path.is_file():
-                arcname = file_path.relative_to(golden_root)
-                zipf.write(file_path, arcname)
+            if not file_path.is_file():
+                continue
+            arcname = file_path.relative_to(golden_root)
+            if arcname.parts[0] == "Annotations_before":
+                continue
+            if arcname.parts[0] == "Annotations" and file_path.suffix.lower() == ".png":
+                colored = label_png_to_palette_bytes(file_path)
+                if colored is not None:
+                    zipf.writestr(str(arcname), colored)
+                    continue
+            zipf.write(file_path, arcname)
         for dim in BEHAVIOR_DIMENSIONS:
             bpath = behavior_file_path(run_dir, dim)
             if bpath.is_file():

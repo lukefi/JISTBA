@@ -1,5 +1,6 @@
 """Drawing mask / ID / behaviour overlays on frames."""
 import base64
+import io
 from pathlib import Path
 from typing import Optional, Tuple, List
 import numpy as np
@@ -158,6 +159,34 @@ def get_color_for_id(id: int, min_val: int = 50) -> Tuple[int, int, int]:
     """
     rng = np.random.RandomState(id)
     return tuple(int(x) for x in rng.randint(min_val, 255, size=3))
+
+
+def id_palette() -> List[int]:
+    """Flat 256-entry RGB palette: 0 = black background, ID n = get_color_for_id(n).
+
+    get_color_for_id colors are drawn onto BGR frames, so they are reversed here
+    to match the golden preview video.
+    """
+    palette = [0, 0, 0]
+    for i in range(1, 256):
+        b, g, r = get_color_for_id(i)
+        palette.extend((r, g, b))
+    return palette
+
+
+def label_png_to_palette_bytes(png_path: Path) -> Optional[bytes]:
+    """Re-encode a single-channel ID label PNG as a palette PNG (pixel values unchanged).
+
+    Returns None if the image is not an 8-bit label map.
+    """
+    with Image.open(png_path) as img:
+        if img.mode not in ("L", "P"):
+            return None
+        indexed = Image.frombytes("P", img.size, img.tobytes())
+    indexed.putpalette(id_palette())
+    buf = io.BytesIO()
+    indexed.save(buf, format="PNG")
+    return buf.getvalue()
 
 
 def encode_frame_to_base64(frame: np.ndarray, quality: int = 90) -> str:

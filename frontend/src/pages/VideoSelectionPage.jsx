@@ -202,20 +202,24 @@ export default function VideoSelectionPage({
               lineHeight: 1.5,
             }}
           >
-            Backend is not reachable at <code>{BACKEND}</code>.
-            {BACKEND.startsWith("http://127.0.0.1") || BACKEND.startsWith("http://localhost") ? (
+            Backend is not reachable at <code>{BACKEND}</code> (mode <code>{import.meta.env.MODE}</code>).
+            {import.meta.env.MODE === "ssh" ? (
               <>
                 {" "}
-                To use a shared remote backend, create <code>frontend/.env</code> with{" "}
-                <code>VITE_API_URL=https://your-tunnel.pinggy.link</code>, restart{" "}
-                <code>npm run dev</code>, then refresh. (Or run an SSH tunnel to port 12212
-                locally.)
+                Check that the backend is running on the server and the{" "}
+                <code>ssh -N -L 12212:localhost:12212 …</code> tunnel is still open, then refresh.
+              </>
+            ) : import.meta.env.MODE === "pinggy" ? (
+              <>
+                {" "}
+                Check that the Pinggy tunnel is still running and <code>frontend/.env.pinggy</code>{" "}
+                has the current URL, then restart <code>npm run dev:pinggy</code>.
               </>
             ) : (
               <>
                 {" "}
-                Check that the tunnel is still running on the desktop and{" "}
-                <code>frontend/.env</code> has the current URL, then restart <code>npm run dev</code>.
+                Start the backend locally, or use <code>npm run dev</code> (SSH tunnel) or{" "}
+                <code>npm run dev:pinggy</code>.
               </>
             )}
           </div>
