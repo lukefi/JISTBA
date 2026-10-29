@@ -336,16 +336,6 @@ vos-annoation_app/
 - Backend API docs: `http://localhost:12212/docs` (FastAPI auto-docs)
 - Frontend uses Vite hot module replacement; components are in `frontend/src/`
 
-## License
-
-This project is licensed under the [Apache License 2.0](LICENSE).
-
-The models this tool builds on are not part of this repository; they are installed separately and remain under their own licenses:
-
-- SAM 3 code and model checkpoints: [SAM License](https://github.com/facebookresearch/sam3/blob/main/LICENSE)
-- XMem: [MIT License](https://github.com/hkchengrex/XMem/blob/main/LICENSE)
-
-Make sure your use of these models complies with their licenses.
 
 ## Acknowledgements
 
@@ -380,6 +370,29 @@ This tool relies on the following models. If you use it in research, please cite
 
 The app is also built with [FastAPI](https://fastapi.tiangolo.com/), [React](https://react.dev/), [Vite](https://vite.dev/), [PyTorch](https://pytorch.org/), [OpenCV](https://opencv.org/) and [FFmpeg](https://ffmpeg.org/).
 
+
 ## AI Use Acknowledgement
 
 Parts of this codebase and its documentation were written with the help of AI coding assistants in the [Cursor](https://cursor.com) editor. All AI-generated code was reviewed, tested and adapted by the author, who takes full responsibility for the final implementation. This is separate from the models the tool itself uses: within the app, masks are proposed by SAM 3 and XMem and then checked and corrected by human annotators, and behaviour labels are assigned by human annotators.
+
+
+## Copyright
+Copyright © 2026 Natural Resources Institute Finland (Luke)
+
+JISTBA was developed by Michal Gregor ([@Eruveoo](https://github.com/Eruveoo)) at Natural Resources Institute Finland (Luke). Luke holds the copyright in the original code. The software is released under the Apache License, Version 2.0; see the LICENSE file for the full terms.
+
+Contributions from the original author and other contributors are welcome.
+
+By submitting a contribution for inclusion in this project, you assign to Luke all transferable copyright in your contribution, including the rights to modify, license and redistribute it. You agree that your contribution will be released under the Apache License, Version 2.0, and confirm that you own the rights being transferred or are authorised by the copyright holder to transfer them.
+
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
+
+The models this tool builds on are not part of this repository; they are installed separately and remain under their own licenses:
+
+- SAM 3 code and model checkpoints: [SAM License](https://github.com/facebookresearch/sam3/blob/main/LICENSE)
+- XMem: [MIT License](https://github.com/hkchengrex/XMem/blob/main/LICENSE)
+
+Make sure your use of these models complies with their licenses.
